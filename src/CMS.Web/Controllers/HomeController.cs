@@ -17,6 +17,12 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    [Route("Login")]
+    public IActionResult Login()
+    {
+        return View();
+    }
 
     public IActionResult Privacy()
     {
