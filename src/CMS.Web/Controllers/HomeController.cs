@@ -21,7 +21,7 @@ public class HomeController(
     {
         if (authenticationService.IsAuthenticated())
         {
-            return RedirectToAction("Admin", "Home");
+            return RedirectToAction("Dashboard", "Home");
         }
 
         return View();
@@ -47,11 +47,11 @@ public class HomeController(
         
         await authenticationService.SignIn(result, true);
 
-        return RedirectToAction("Admin", "Home");
+        return RedirectToAction("Dashboard", "Home");
     }
 
-    [Route("Admin")]
-    public IActionResult Admin()
+    [Route("Dashboard")]
+    public IActionResult Dashboard()
     {
         return View();
     }

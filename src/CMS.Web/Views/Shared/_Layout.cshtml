@@ -1,50 +1,144 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - CMS.Web</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/CMS.Web.styles.css" asp-append-version="true"/>
-</head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CMS.Web</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2025 - CMS.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
+
+    <script>
+        // Run immediately to set initial state before rendering
+        if (localStorage.getItem('sidebarCollapsed') === 'true' && window.innerWidth > 768) {
+            document.documentElement.classList.add('sidebar-initial-collapsed');
+        }
+    </script>
+</head>
+<body class="body">
+<!-- Top Navigation -->
+<nav class="top-nav">
+    <button class="top-nav__mobile-toggle" onclick="toggleMobileSidebar()">☰</button>
+    <div class="top-nav__logo">CMS Admin</div>
+    <div class="top-nav__user-menu">
+        <a href="#" class="top-nav__profile">
+            <span>Profile</span>
+            <div class="top-nav__profile-img"></div>
+        </a>
+        <div class="top-nav__dropdown">
+            <a href="#" class="top-nav__dropdown-item">
+                <span class="top-nav__dropdown-icon">📊</span>
+                <span>Placeholder 1</span>
+            </a>
+            <a href="#" class="top-nav__dropdown-item">
+                <span class="top-nav__dropdown-icon">📋</span>
+                <span>Placeholder 2</span>
+            </a>
+            <a href="#" class="top-nav__dropdown-item">
+                <span class="top-nav__dropdown-icon">🔧</span>
+                <span>Placeholder 3</span>
+            </a>
+            <a href="#" class="top-nav__dropdown-item">
+                <span class="top-nav__dropdown-icon">🚪</span>
+                <span>Logout</span>
+            </a>
+        </div>
     </div>
-</footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+</nav>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <button class="sidebar__toggle-btn" onclick="toggleSidebar()">☰</button>
+    <ul class="sidebar__menu">
+        <li class="sidebar__menu-item sidebar__menu-item--profile">
+            <a href="#" class="sidebar__menu-link sidebar__menu-link--profile" onclick="toggleSubmenu(event, 'profile')">
+                <div class="sidebar__menu-link--profile-img"></div>
+                <span class="sidebar__menu-link--username">John Doe</span>
+            </a>
+            <ul class="sidebar__submenu">
+                <li class="sidebar__submenu-item">
+                    <a href="#" class="sidebar__submenu-link">
+                        <span class="sidebar__menu-icon">📊</span>
+                        <span>Placeholder 1</span>
+                    </a>
+                </li>
+                <li class="sidebar__submenu-item">
+                    <a href="#" class="sidebar__submenu-link">
+                        <span class="sidebar__menu-icon">📋</span>
+                        <span>Placeholder 2</span>
+                    </a>
+                </li>
+                <li class="sidebar__submenu-item">
+                    <a href="#" class="sidebar__submenu-link">
+                        <span class="sidebar__menu-icon">🔧</span>
+                        <span>Placeholder 3</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="sidebar__menu-item">
+            <a href="#" class="sidebar__menu-link">
+                <span class="sidebar__menu-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar__menu-item">
+            <a href="#" class="sidebar__menu-link">
+                <span class="sidebar__menu-icon">📝</span>
+                <span>Content</span>
+            </a>
+        </li>
+        <li class="sidebar__menu-item sidebar__menu-item--users">
+            <a href="#" class="sidebar__menu-link sidebar__menu-link--users" onclick="toggleSubmenu(event, 'users')">
+                <span class="sidebar__menu-icon">👥</span>
+                <span>Users</span>
+            </a>
+            <ul class="sidebar__submenu">
+                <li class="sidebar__submenu-item">
+                    <a href="@Url.Action("Index", "Users")" class="sidebar__submenu-link">
+                        <span class="sidebar__menu-icon">👤</span>
+                        <span>User List</span>
+                    </a>
+                </li>
+                <li class="sidebar__submenu-item">
+                    <a href="#" class="sidebar__submenu-link">
+                        <span class="sidebar__menu-icon">➕</span>
+                        <span>Add User</span>
+                    </a>
+                </li>
+                <li class="sidebar__submenu-item">
+                    <a href="#" class="sidebar__submenu-link">
+                        <span class="sidebar__menu-icon">🔍</span>
+                        <span>Search Users</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="sidebar__menu-item">
+            <a href="#" class="sidebar__menu-link">
+                <span class="sidebar__menu-icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar__logout">
+        <div class="sidebar__logout-separator"></div>
+        <button class="sidebar__logout-btn">
+            <span class="sidebar__menu-icon">🚪</span>
+            <span>Logout</span>
+        </button>
+    </div>
+</aside>
+
+<!-- Main Container -->
+<main class="main-container">
+    <div class="main-container__content">
+        <div class="main-container__content--body">
+            @RenderBody()
+        </div>
+    </div>
+</main>
+
+<script src="~/js/site.min.js" asp-append-version="true"></script>
 </body>
 </html>

@@ -1,0 +1,205 @@
+﻿@{
+    ViewData["Title"] = "Users";
+}
+
+<h1 class="content_title">
+    Manage Users
+</h1>
+
+<div class="data-table-container">
+    <!-- Search Form -->
+    <form class="search-container">
+        <div class="modern-search">
+            <!-- Search Icon Inside Input -->
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+            <input type="text" id="searchInput" name="search" value="" placeholder="Search users..."
+                   aria-label="Search users">
+            <button type="submit" class="search-btn" onclick="searchUsers(); return false;">
+                <!-- Search Icon Inside Button -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                    <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </button>
+        </div>
+    </form>
+
+    <!-- Users Table with Dummy Data -->
+    <div class="table-container">
+        <table class="modern-table">
+            <thead>
+            <tr>
+                <th data-sort="name">Name<span id="sortName"></span></th>
+                <th data-sort="email">Email<span id="sortEmail"></span></th>
+            </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Pagination with Dummy State -->
+    <nav aria-label="User pagination">
+        <ul class="modern-pagination" id="pagination"></ul>
+    </nav>
+</div>
+
+<script>
+    let currentPage = 1;
+    let totalPages = 1;
+    let sortBy = 'name';
+    let sortDirection = 'asc';
+    const pagination = document.getElementById('pagination');
+    const tableBody = document.getElementById('tableBody');
+    const searchInput = document.getElementById('searchInput');
+    const sortName = document.getElementById('sortName');
+    const sortEmail = document.getElementById('sortEmail');
+    const sortableColumns = ['name', 'email']; // Define valid sortable columns here
+
+    // Mock API call (replace with actual .NET API endpoint)
+    async function fetchUsers(page = 1, searchTerm = '', sortBy = 'name', sortDirection = 'asc') {
+        try {
+            const response = await fetch(`@Url.Action("GetUsers", "Users")?page=${page}&search=${encodeURIComponent(searchTerm)}&sortBy=${sortBy}&sortDirection=${sortDirection}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            return data; // Expected format: { data: [{name, email}], totalPages, currentPage }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            return {data: [], totalPages: 1, currentPage: 1};
+        }
+    }
+
+    // Update table and pagination
+    async function updateContent(page = 1, searchTerm = '', sortByParam = sortBy, sortDirectionParam = sortDirection) {
+        const result = await fetchUsers(page, searchTerm, sortByParam, sortDirectionParam);
+        totalPages = result.totalPages || 1;
+        currentPage = result.currentPage || 1;
+        sortBy = sortByParam;
+        sortDirection = sortDirectionParam;
+
+        // Update sort indicators
+        sortName.textContent = sortBy === 'name' ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
+        sortEmail.textContent = sortBy === 'email' ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
+
+        // Update table
+        tableBody.innerHTML = result.data.map(user => `
+            <tr>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+            </tr>
+        `).join('');
+
+        // Update pagination
+        updatePagination();
+    }
+
+    // Pagination logic
+    function updatePagination() {
+        pagination.innerHTML = '';
+        const maxButtons = 7;
+        const pageButtons = [];
+
+        // Previous button
+        pageButtons.push(`
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </a>
+            </li>
+        `);
+
+        let startPage, endPage;
+        if (totalPages <= maxButtons - 2) {
+            startPage = 1;
+            endPage = totalPages;
+        } else {
+            const maxPagesToShow = maxButtons - 3; // Account for Previous, Next, Skip to End
+            const halfRange = Math.floor(maxPagesToShow / 2);
+            startPage = Math.max(currentPage - halfRange, 1);
+            endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
+
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(endPage - maxPagesToShow + 1, 1);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageButtons.push(`
+                <li class="page-item ${currentPage === i ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+                </li>
+            `);
+        }
+
+        // Skip to End button
+        pageButtons.push(`
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="changePage(${totalPages}); return false;">>>></a>
+            </li>
+        `);
+
+        // Next button
+        pageButtons.push(`
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </a>
+            </li>
+        `);
+
+        pagination.innerHTML = pageButtons.join('');
+    }
+
+    // Change page and fetch new data
+    async function changePage(page) {
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+        currentPage = page;
+        await updateContent(currentPage, searchInput.value, sortBy, sortDirection);
+    }
+
+    // Search functionality
+    async function searchUsers() {
+        currentPage = 1; // Reset to first page on search
+        await updateContent(currentPage, searchInput.value, sortBy, sortDirection);
+    }
+
+    // Sort functionality with dynamic column detection
+    function sortTable(event) {
+        const th = event.target.closest('th');
+        if (!th) return;
+
+        const column = th.getAttribute('data-sort');
+        if (!sortableColumns.includes(column)) return;
+
+        if (sortBy === column) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortBy = column;
+            sortDirection = 'asc';
+        }
+        currentPage = 1; // Reset to first page on sort
+        updateContent(currentPage, searchInput.value, sortBy, sortDirection);
+    }
+
+    // Attach event listeners dynamically
+    document.addEventListener('DOMContentLoaded', () => {
+        const headers = document.querySelectorAll('th[data-sort]');
+        headers.forEach(header => {
+            header.addEventListener('click', sortTable);
+        });
+    });
+
+    // Initialize
+    updateContent();
+</script>

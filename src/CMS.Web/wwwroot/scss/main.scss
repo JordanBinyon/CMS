@@ -1,2 +1,31 @@
 ﻿@use 'components/login';
+@use 'components/data-table';
 @use 'layout/admin-layout';
+
+h1 {
+  font-family: 'Arial', sans-serif; /* Matches the clean, sans-serif font style in the layout */
+  font-size: 32px; /* A larger size for prominence */
+  font-weight: 600; /* Slightly bold for emphasis */
+  color: #333; /* Dark gray for readability, matching the text in the table */
+  position: relative; /* For the underline effect */
+  display: inline-block; /* Ensures the underline only spans the text width */
+  padding-bottom: 8px; /* Space between the text and the underline */
+  margin-bottom: 20px; /* Space below the H1 */
+}
+
+/* Colored underline using a pseudo-element */
+h1::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50%; /* Underline spans half the width of the text for a stylish look */
+  height: 3px; /* Thickness of the underline */
+  background-color: #3b82f6; /* Blue color matching the search button and pagination */
+  border-radius: 2px; /* Slight rounding to match the rounded corners in the layout */
+}
+
+.content_title {
+  margin-top: 40px;
+  margin-left: 25px;
+}
