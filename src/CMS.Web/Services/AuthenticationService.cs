@@ -16,7 +16,7 @@ public class AuthenticationService(IHttpContextAccessor httpContextAccessor)
 
     public AuthenticatedUser? GetAuthenticatedUser()
     {
-        if (_httpContext == null || IsAuthenticated)
+        if (_httpContext == null || IsAuthenticated())
         {
             throw new AuthenticationFailureException("No authenticated user");
         }
@@ -62,7 +62,10 @@ public class AuthenticationService(IHttpContextAccessor httpContextAccessor)
         await _httpContext.SignOutAsync();
     }
 
-    private bool IsAuthenticated => _httpContext?.User.Identity?.IsAuthenticated == true;
+    public bool IsAuthenticated()
+    {
+        return _httpContext?.User.Identity?.IsAuthenticated == true;
+    }
 
     private IEnumerable<Claim> GetUserClaims(AuthenticatedUser authenticatedUser)
     {

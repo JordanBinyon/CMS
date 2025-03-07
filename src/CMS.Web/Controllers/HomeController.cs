@@ -8,7 +8,6 @@ using CMS.Web.Models;
 namespace CMS.Web.Controllers;
 
 public class HomeController(
-    ILogger<HomeController> logger,
     IAuthenticationService authenticationService,
     IUserService userService) : Controller
 {
@@ -20,6 +19,11 @@ public class HomeController(
     [Route("Login")]
     public IActionResult Login()
     {
+        if (authenticationService.IsAuthenticated())
+        {
+            return RedirectToAction("Admin", "Home");
+        }
+
         return View();
     }
 

@@ -7,4 +7,5 @@ public interface IAuthenticationService
     AuthenticatedUser? GetAuthenticatedUser();
     Task SignIn(AuthenticatedUser authenticatedUser, bool isPersistent = false);
     Task SignOut();
+    bool IsAuthenticated();
 }

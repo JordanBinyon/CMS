@@ -43,7 +43,7 @@ public class UserService(DataContext dataContext) : IUserService
             })
             .SingleOrDefaultAsync();
 
-        if (user == null || PasswordHasher.VerifyPassword(password, user.Password))
+        if (user == null || !PasswordHasher.VerifyPassword(password, user.Password))
         {
             return null;
         }

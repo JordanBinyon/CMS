@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CMS.Helpers\CMS.Helpers.csproj" />
       <ProjectReference Include="..\CMS.Models.Database\CMS.Models.Database.csproj" />
     </ItemGroup>
 
