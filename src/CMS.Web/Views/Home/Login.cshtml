@@ -1,3 +1,6 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CMS.Models.Web.ViewModels.LoginViewModel
+
 @{
     Layout = "";
 }
@@ -8,17 +11,48 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login</title>
-        <link rel="stylesheet" href="~/css/login.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
     </head>
     <body>
-        <div class="login">
-            <h2 class="login__title">Login</h2>
-            <form class="login__form">
-                <input class="login__input" type="text" placeholder="Username" required>
-                <input class="login__input" type="password" placeholder="Password" required>
-                <button class="login__button" type="submit">Sign In</button>
-            </form>
-            <p class="login__footer"><a href="#" class="login__link">Forgot Password?</a></p>
-        </div>
+    <div class="login">
+        <h2 class="login__title">Login</h2>
+        <form class="login__form" asp-action="Login" method="post">
+            @if (ViewData.ModelState is { IsValid: false, ErrorCount: > 0 })
+            {
+                <div asp-validation-summary="All" class="login__validation-summary text-danger"></div>
+            }
+
+            <div class="form-group">
+                <input class="login__input"
+                       type="email"
+                       asp-for="Email"
+                       placeholder="Email"
+                       required
+                       data-val="true"
+                       data-val-email="Please enter a valid email address"
+                       data-val-required="Email is required"/>
+            </div>
+
+            <div class="form-group">
+                <input class="login__input"
+                       type="password"
+                       asp-for="Password"
+                       placeholder="Password"
+                       required
+                       data-val="true"
+                       data-val-required="Password is required"
+                       data-val-length="Password must be between 6 and 100 characters"
+                       data-val-length-min="6"
+                       data-val-length-max="100"/>
+            </div>
+
+            <button class="login__button" type="submit">Sign In</button>
+        </form>
+        <p class="login__footer"><a href="#" class="login__link">Forgot Password?</a></p>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     </body>
 </html>

@@ -1,6 +1,6 @@
 ﻿using CMS.Database;
 using CMS.Helpers;
-using CMS.Interfaces;
+using CMS.Interfaces.User;
 using CMS.Models.Database;
 using CMS.Models.Services;
 using Microsoft.EntityFrameworkCore;

@@ -1,0 +1,146 @@
+﻿// Variables for reusability
+$background-body: #e8ecef; // Soft gray background
+$background-login: #ffffff;
+$shadow-light: rgba(0, 0, 0, 0.1);
+$shadow-hover: rgba(0, 0, 0, 0.15);
+$text-dark: #2c2c2c; // Dark gray for text
+$text-muted: #999; // Placeholder color
+$border-light: #d1d1d1; // Soft border
+$border-focus: #555; // Darker focus border
+$button-bg: #2c2c2c; // Button background
+$button-hover: #444; // Button hover
+$error-color: #e63946; // Validation red
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: $background-body;
+}
+
+.login {
+  width: 350px;
+  padding: 35px;
+  background: $background-login;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px $shadow-light;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 20px $shadow-hover;
+  }
+
+  &__title {
+    color: $text-dark;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  &__validation-summary {
+    margin-bottom: 20px; 
+    padding: 10px;
+    background: rgba($error-color, 0.1);
+    border-radius: 6px;
+    border-left: 4px solid $error-color; 
+    font-size: 0.9rem;
+    line-height: 1.4;
+
+    &.text-danger {
+      color: $error-color; 
+      font-weight: 500;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid $border-light;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: $text-dark;
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $border-focus;
+    }
+
+    &:invalid:focus,
+    &[data-val-required][value=""]:focus {
+      border-color: $error-color;
+    }
+  }
+
+  &__button {
+    width: 100%;
+    padding: 12px;
+    background: $button-bg;
+    color: $background-login;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: $button-hover;
+    }
+  }
+
+  &__footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+  }
+
+  &__link {
+    color: $text-dark;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $border-focus;
+      text-decoration: underline;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+
+  .text-danger {
+    display: block;
+    font-size: 0.85rem;
+    color: $error-color;
+    margin-top: 5px;
+    line-height: 1.2;
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+.text-danger {
+  color: $error-color;
+}

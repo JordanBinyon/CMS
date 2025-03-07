@@ -6,18 +6,35 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <Target Name="CompileSCSS" BeforeTargets="Build">
+        <Exec Command="npx gulp" />
+    </Target>
+
+    <Target Name="BundleMinify" BeforeTargets="Build">
+        <Exec Command="dotnet bundle" />
+    </Target>
+
     <ItemGroup>
       <ProjectReference Include="..\CMS.Database\CMS.Database.csproj" />
       <ProjectReference Include="..\CMS.Interfaces\CMS.Interfaces.csproj" />
       <ProjectReference Include="..\CMS.Models.Services\CMS.Models.Services.csproj" />
+      <ProjectReference Include="..\CMS.Models.Web\CMS.Models.Web.csproj" />
       <ProjectReference Include="..\CMS.Services\CMS.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="wwwroot/scss/**/*.scss">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

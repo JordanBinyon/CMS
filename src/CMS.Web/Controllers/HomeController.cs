@@ -1,29 +1,51 @@
 using System.Diagnostics;
+using CMS.Interfaces.User;
+using CMS.Models.Services;
+using CMS.Models.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using CMS.Web.Models;
 
 namespace CMS.Web.Controllers;
 
-public class HomeController : Controller
+public class HomeController(
+    ILogger<HomeController> logger,
+    IAuthenticationService authenticationService,
+    IUserService userService) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
-
     public IActionResult Index()
     {
         return View();
     }
-    
+
     [Route("Login")]
     public IActionResult Login()
     {
         return View();
     }
-    
+
+    [HttpPost]
+    [Route("Login")]
+    public async Task<IActionResult> Login(LoginViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        AuthenticatedUser? result = await userService.AuthenticateUser(model.Email, model.Password);
+
+        if (result == null)
+        {
+            ModelState.AddModelError(string.Empty, "Invalid email or password");
+            
+            return View(model);
+        }
+        
+        await authenticationService.SignIn(result, true);
+
+        return RedirectToAction("Admin", "Home");
+    }
+
     [Route("Admin")]
     public IActionResult Admin()
     {
@@ -34,5 +56,11 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    [Route("403")]
+    public IActionResult PermissionDenied()
+    {
+        return View();
     }
 }

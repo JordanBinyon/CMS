@@ -1,6 +1,6 @@
 ﻿using CMS.Models.Services;
 
-namespace CMS.Interfaces;
+namespace CMS.Interfaces.User;
 
 public interface IUserService
 {

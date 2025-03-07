@@ -1,6 +1,8 @@
 using CMS.Database;
 using CMS.Interfaces;
+using CMS.Interfaces.User;
 using CMS.Services;
+using CMS.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -23,7 +25,9 @@ void ConfigureServices(IServiceCollection services)
     });
     services.AddControllersWithViews();
     
+    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     services.AddScoped<IUserService, UserService>();
+    services.AddScoped<IAuthenticationService, AuthenticationService>();
 }
 
 void ConfigureApp(WebApplication app)
