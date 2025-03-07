@@ -1,7 +1,6 @@
 using CMS.Database;
-using CMS.Interfaces;
 using CMS.Interfaces.User;
-using CMS.Services;
+using CMS.Web.Extensions;
 using CMS.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -48,8 +47,14 @@ void ConfigureServices(IServiceCollection services)
             options.SlidingExpiration = true; // Renew cookie if active
         });
     
+    // Get references to the assemblies - (Use UserService to get the assembly)
+    var interfaceAssembly = typeof(IUserService).Assembly; // From CMS.Interfaces
+    var serviceAssembly = typeof(CMS.Services.UserService).Assembly;     // From CMS.Services
+
+    // Register services automatically from both assemblies
+    builder.Services.AddServicesAutomatically(interfaceAssembly, serviceAssembly);
+    
     services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-    services.AddScoped<IUserService, UserService>();
     services.AddScoped<IAuthenticationService, AuthenticationService>();
 }
 
