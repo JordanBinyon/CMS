@@ -21,12 +21,30 @@ $border-radius-small: 8px;
   padding: 20px;
   background: $background-white;
   width: 100%;
+  border-radius: $border-radius-medium;
+}
+
+.data-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-top: 25px;
+  padding-left: 25px;
+  padding-right: 25px;
+
+  .content_title {
+    font-size: 2rem;
+    color: $text-muted;
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
 }
 
 .search-container {
   max-width: 500px;
-  margin-bottom: 30px;
-  margin-left: auto;
   width: 100%;
 }
 
@@ -176,14 +194,28 @@ $border-radius-small: 8px;
       word-break: break-word;
 
       &:first-child {
-	font-weight: 600;
-	color: $text-muted;
+        font-weight: 600;
+        color: $text-muted;
       }
 
       &:last-child {
-	padding-bottom: 0;
+        padding-bottom: 0;
       }
     }
+  }
+
+  .data-table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    .content_title {
+      margin: 0;
+    }
+  }
+
+  .search-container {
+    max-width: 100%;
   }
 }
 

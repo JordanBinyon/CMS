@@ -4,6 +4,7 @@ using CMS.Models.Services;
 using CMS.Models.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using CMS.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CMS.Web.Controllers;
 
@@ -50,6 +51,7 @@ public class HomeController(
         return RedirectToAction("Dashboard", "Home");
     }
 
+    [Authorize]
     [Route("Dashboard")]
     public IActionResult Dashboard()
     {

@@ -2,31 +2,26 @@
     ViewData["Title"] = "Users";
 }
 
-<h1 class="content_title">
-    Manage Users
-</h1>
-
-<div class="data-table-container">
-    <!-- Search Form -->
+<div class="data-table-header">
+    <h1 class="content_title">Manage Users</h1>
     <form class="search-container">
         <div class="modern-search">
             <!-- Search Icon Inside Input -->
             <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                <path
-                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
             </svg>
-            <input type="text" id="searchInput" name="search" value="" placeholder="Search users..."
-                   aria-label="Search users">
+            <input type="text" id="searchInput" name="search" value="" placeholder="Search users..." aria-label="Search users">
             <button type="submit" class="search-btn" onclick="searchUsers(); return false;">
                 <!-- Search Icon Inside Button -->
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                    <path
-                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                 </svg>
             </button>
         </div>
     </form>
+</div>
 
+<div class="data-table-container">
     <!-- Users Table with Dummy Data -->
     <div class="table-container">
         <table class="modern-table">
@@ -56,7 +51,7 @@
     const searchInput = document.getElementById('searchInput');
     const sortName = document.getElementById('sortName');
     const sortEmail = document.getElementById('sortEmail');
-    const sortableColumns = ['name', 'email']; // Define valid sortable columns here
+    const sortableColumns = ['name', 'email'];
 
     // Mock API call (replace with actual .NET API endpoint)
     async function fetchUsers(page = 1, searchTerm = '', sortBy = 'name', sortDirection = 'asc') {
@@ -82,10 +77,6 @@
         currentPage = result.currentPage || 1;
         sortBy = sortByParam;
         sortDirection = sortDirectionParam;
-
-        // Update sort indicators
-        sortName.textContent = sortBy === 'name' ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
-        sortEmail.textContent = sortBy === 'email' ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
 
         // Update table
         tableBody.innerHTML = result.data.map(user => `
@@ -121,7 +112,7 @@
             startPage = 1;
             endPage = totalPages;
         } else {
-            const maxPagesToShow = maxButtons - 3; // Account for Previous, Next, Skip to End
+            const maxPagesToShow = maxButtons - 3;
             const halfRange = Math.floor(maxPagesToShow / 2);
             startPage = Math.max(currentPage - halfRange, 1);
             endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
@@ -170,7 +161,7 @@
 
     // Search functionality
     async function searchUsers() {
-        currentPage = 1; // Reset to first page on search
+        currentPage = 1;
         await updateContent(currentPage, searchInput.value, sortBy, sortDirection);
     }
 
@@ -188,8 +179,17 @@
             sortBy = column;
             sortDirection = 'asc';
         }
-        currentPage = 1; // Reset to first page on sort
+        currentPage = 1;
         updateContent(currentPage, searchInput.value, sortBy, sortDirection);
+
+        // Update sort classes
+        const headers = document.querySelectorAll('th');
+        headers.forEach(header => {
+            header.classList.remove('sorted-asc', 'sorted-desc');
+            if (header.getAttribute('data-sort') === sortBy) {
+                header.classList.add(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+            }
+        });
     }
 
     // Attach event listeners dynamically
