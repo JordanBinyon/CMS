@@ -51,6 +51,14 @@ public class HomeController(
         return RedirectToAction("Dashboard", "Home");
     }
 
+    [Route("Logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await authenticationService.SignOut();
+        
+        return RedirectToAction("Index", "Home");
+    }
+
     [Authorize]
     [Route("Dashboard")]
     public IActionResult Dashboard()

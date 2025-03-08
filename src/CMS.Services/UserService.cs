@@ -3,6 +3,7 @@ using CMS.Helpers;
 using CMS.Interfaces.User;
 using CMS.Models.Database;
 using CMS.Models.Services;
+using CMS.Models.Services.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace CMS.Services;
@@ -55,5 +56,20 @@ public class UserService(DataContext dataContext) : IUserService
             LastName = user.LastName,
             Email = user.Email,
         };
+    }
+
+    public async Task<List<UserModel>> GetUsers()
+    {
+        List<UserModel> users = await dataContext.Users
+            .Select(x => new UserModel
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Email = x.Email
+            })
+            .ToListAsync();
+        
+        return users;
     }
 }
