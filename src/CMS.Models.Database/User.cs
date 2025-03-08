@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS.Models.Database;
 
@@ -14,4 +15,7 @@ public class User
     
     public DateTimeOffset Created { get; set; }
     public DateTimeOffset? Modified { get; set; }
+    
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public string Name { get; private set; } 
 }

@@ -35,15 +35,27 @@
         </table>
     </div>
 
-    <!-- Pagination with Dummy State -->
-    <nav aria-label="User pagination">
-        <ul class="modern-pagination" id="pagination"></ul>
-    </nav>
+    <!-- Pagination with Rows Per Page -->
+    <div class="pagination-container">
+        <div class="rows-per-page">
+            <label for="rowsPerPage">Rows per page:</label>
+            <select id="rowsPerPage" onchange="changeRowsPerPage()">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <nav aria-label="User pagination">
+            <ul class="modern-pagination" id="pagination"></ul>
+        </nav>
+    </div>
 </div>
 
 <script>
     let currentPage = 1;
     let totalPages = 1;
+    let rowsPerPage = 10; // Default rows per page
     let sortBy = 'name';
     let sortDirection = 'asc';
     const pagination = document.getElementById('pagination');
@@ -51,12 +63,13 @@
     const searchInput = document.getElementById('searchInput');
     const sortName = document.getElementById('sortName');
     const sortEmail = document.getElementById('sortEmail');
+    const rowsPerPageSelect = document.getElementById('rowsPerPage');
     const sortableColumns = ['name', 'email'];
 
     // Mock API call (replace with actual .NET API endpoint)
-    async function fetchUsers(page = 1, searchTerm = '', sortBy = 'name', sortDirection = 'asc') {
+    async function fetchUsers(page = 1, searchTerm = '', sortBy = 'name', sortDirection = 'asc', pageSize = rowsPerPage) {
         try {
-            const response = await fetch(`@Url.Action("GetUsers", "Users")?page=${page}&search=${encodeURIComponent(searchTerm)}&sortBy=${sortBy}&sortDirection=${sortDirection}`, {
+            const response = await fetch(`@Url.Action("GetUsers", "Users")?page=${page}&search=${encodeURIComponent(searchTerm)}&sortBy=${sortBy}&sortDirection=${sortDirection}&pageSize=${pageSize}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -71,12 +84,16 @@
     }
 
     // Update table and pagination
-    async function updateContent(page = 1, searchTerm = '', sortByParam = sortBy, sortDirectionParam = sortDirection) {
-        const result = await fetchUsers(page, searchTerm, sortByParam, sortDirectionParam);
+    async function updateContent(page = 1, searchTerm = '', sortByParam = sortBy, sortDirectionParam = sortDirection, pageSize = rowsPerPage) {
+        const result = await fetchUsers(page, searchTerm, sortByParam, sortDirectionParam, pageSize);
         totalPages = result.totalPages || 1;
         currentPage = result.currentPage || 1;
         sortBy = sortByParam;
         sortDirection = sortDirectionParam;
+
+        // Update sort indicators (though not currently styled in CSS)
+        sortName.textContent = sortBy === 'name' ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
+        sortEmail.textContent = sortBy === 'email' ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
 
         // Update table
         tableBody.innerHTML = result.data.map(user => `
@@ -156,13 +173,20 @@
         if (page < 1) page = 1;
         if (page > totalPages) page = totalPages;
         currentPage = page;
-        await updateContent(currentPage, searchInput.value, sortBy, sortDirection);
+        await updateContent(currentPage, searchInput.value, sortBy, sortDirection, rowsPerPage);
+    }
+
+    // Change rows per page
+    async function changeRowsPerPage() {
+        rowsPerPage = parseInt(rowsPerPageSelect.value);
+        currentPage = 1; // Reset to first page when rows per page changes
+        await updateContent(currentPage, searchInput.value, sortBy, sortDirection, rowsPerPage);
     }
 
     // Search functionality
     async function searchUsers() {
         currentPage = 1;
-        await updateContent(currentPage, searchInput.value, sortBy, sortDirection);
+        await updateContent(currentPage, searchInput.value, sortBy, sortDirection, rowsPerPage);
     }
 
     // Sort functionality with dynamic column detection
@@ -180,7 +204,7 @@
             sortDirection = 'asc';
         }
         currentPage = 1;
-        updateContent(currentPage, searchInput.value, sortBy, sortDirection);
+        updateContent(currentPage, searchInput.value, sortBy, sortDirection, rowsPerPage);
 
         // Update sort classes
         const headers = document.querySelectorAll('th');

@@ -1,4 +1,4 @@
-﻿namespace CMS.Models.Web.Pagination;
+﻿namespace CMS.Models.Services.Pagination;
 
 public class PaginatedResponse<T>
 {

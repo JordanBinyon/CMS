@@ -164,58 +164,42 @@ $border-radius-small: 8px;
   }
 }
 
-@media (max-width: 768px) {
-  .table-container {
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.rows-per-page {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-size: 14px;
+    color: $text-muted;
   }
 
-  .modern-table {
-    thead {
-      display: none;
+  select {
+    padding: 5px;
+    border-radius: $border-radius-small;
+    border: 1px solid $border-color;
+    font-size: 14px;
+    color: $text-dark;
+    background: $background-white;
+    cursor: pointer;
+    box-shadow: $shadow-light;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: $shadow-hover;
     }
 
-    tbody tr {
-      display: block;
-      margin: 10px 0;
-      border-radius: $border-radius-small;
-      box-shadow: $shadow-light;
-      padding: 15px;
-      background: transparent;
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
     }
-
-    tbody td {
-      display: block;
-      padding: 8px 0;
-      border-bottom: none;
-      width: 100%;
-      font-size: 14px;
-      word-break: break-word;
-
-      &:first-child {
-        font-weight: 600;
-        color: $text-muted;
-      }
-
-      &:last-child {
-        padding-bottom: 0;
-      }
-    }
-  }
-
-  .data-table-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-
-    .content_title {
-      margin: 0;
-    }
-  }
-
-  .search-container {
-    max-width: 100%;
   }
 }
 
@@ -275,6 +259,64 @@ $border-radius-small: 8px;
 }
 
 @media (max-width: 768px) {
+  .table-container {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .modern-table {
+    thead {
+      display: none;
+    }
+
+    tbody tr {
+      display: block;
+      margin: 10px 0;
+      border-radius: $border-radius-small;
+      box-shadow: $shadow-light;
+      padding: 15px;
+      background: transparent;
+    }
+
+    tbody td {
+      display: block;
+      padding: 8px 0;
+      border-bottom: none;
+      width: 100%;
+      font-size: 14px;
+      word-break: break-word;
+
+      &:first-child {
+        font-weight: 600;
+        color: $text-muted;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .data-table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    .content_title {
+      margin: 0;
+    }
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .modern-pagination {
     flex-wrap: wrap;
     justify-content: center;
