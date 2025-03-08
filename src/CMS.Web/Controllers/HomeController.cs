@@ -2,6 +2,7 @@ using System.Diagnostics;
 using CMS.Interfaces.User;
 using CMS.Models.Services;
 using CMS.Models.Web.ViewModels;
+using CMS.Models.Web.ViewModels.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using CMS.Web.Models;
 using Microsoft.AspNetCore.Authorization;

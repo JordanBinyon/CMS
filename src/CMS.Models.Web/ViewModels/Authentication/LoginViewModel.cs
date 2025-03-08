@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CMS.Models.Web.ViewModels;
+namespace CMS.Models.Web.ViewModels.Authentication;
 
-public class LoginViewModel : BaseViewModel
+public class LoginViewModel
 {
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Please enter a valid email address")]
