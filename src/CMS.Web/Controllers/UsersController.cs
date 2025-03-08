@@ -1,16 +1,18 @@
 ﻿using CMS.Interfaces.User;
 using CMS.Models.Services.Pagination;
+using CMS.Models.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMS.Web.Controllers;
 
-public class UsersController(IUserService userService) : Controller
+public class UsersController(IAuthenticationService authenticationService, IUserService userService)
+    : BaseController(authenticationService)
 {
     [Authorize]
     public IActionResult Index()
     {
-        return View();
+        return View(PopulateBaseViewModel(new BaseViewModel()));
     }
 
     [HttpGet]

@@ -10,7 +10,7 @@ namespace CMS.Web.Controllers;
 
 public class HomeController(
     IAuthenticationService authenticationService,
-    IUserService userService) : Controller
+    IUserService userService) : BaseController(authenticationService)
 {
     public IActionResult Index()
     {
@@ -63,7 +63,7 @@ public class HomeController(
     [Route("Dashboard")]
     public IActionResult Dashboard()
     {
-        return View();
+        return View(PopulateBaseViewModel(new BaseViewModel()));
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

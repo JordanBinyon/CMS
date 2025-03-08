@@ -16,7 +16,7 @@ public class AuthenticationService(IHttpContextAccessor httpContextAccessor)
 
     public AuthenticatedUser? GetAuthenticatedUser()
     {
-        if (_httpContext == null || IsAuthenticated())
+        if (_httpContext == null || !IsAuthenticated())
         {
             throw new AuthenticationFailureException("No authenticated user");
         }

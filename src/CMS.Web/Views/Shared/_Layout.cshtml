@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model CMS.Models.Web.ViewModels.BaseViewModel
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -22,7 +24,7 @@
     <div class="top-nav__logo">CMS Admin</div>
     <div class="top-nav__user-menu">
         <a href="#" class="top-nav__profile">
-            <span>Profile</span>
+            <span>@Model.UserName</span>
             <div class="top-nav__profile-img"></div>
         </a>
         <div class="top-nav__dropdown">
