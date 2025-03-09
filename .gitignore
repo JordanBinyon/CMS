@@ -514,4 +514,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Ignore user-specified generated files
+main.css
+site.min.js
+
 # End of https://www.toptal.com/developers/gitignore/api/rider,csharp,react,windows
